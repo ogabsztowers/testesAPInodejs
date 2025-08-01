@@ -8,6 +8,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="./styles/style.css">
 </head>
+
 <body>
 
     <header>
@@ -23,14 +24,15 @@
             <button id="idAddGosto">popular banco</button>
         </div>
         <div id="gostosUsuario"></div>
-
+        <div id="exibirGostos"></div>
 
     </div>
 </body>
 
 </html>
 <script>
-    const cadastrarGosto = document.getElementById('idAddGosto')
+    const exibirGostos = document.getElementById('exibirGostos');
+    const cadastrarGosto = document.getElementById('idAddGosto');
     const usuarioLogado = localStorage.getItem('usuarioLogado');
     const usuario = JSON.parse(usuarioLogado);
     const logOut = document.getElementById('btnLogOut');
@@ -190,6 +192,8 @@
             p.textContent = `-nome: ${item.nome}`;
 
             const button = document.createElement('button');
+            const btnGostos = document.createElement('button');
+            btnGostos.textContent = 'ver detalhes do usuario'
             button.textContent = 'deletar';
 
             button.addEventListener('click', async () => {
@@ -201,10 +205,38 @@
                     localStorage.clear();
                     window.location.href = 'index.html';
                 }
+            })
+
+            btnGostos.addEventListener('click', async () => {
+                try {
+                    const response = await fetch(`/exibirDadosUsuario/${item.id}`, {
+                        method: 'GET'
+                    })
+
+                    const dadosUsuario = await response.json();
+                    exibirGostos.innerHTML = ''
+                    exibirGostos.innerHTML = 'dados do usuario:<br><br>'
+                    const btnOcultar = document.createElement('button')
+                    btnOcultar.textContent = 'ocultar dados do usuario'
+                    btnOcultar.addEventListener('click', () => {
+                        exibirGostos.innerHTML = ''
+                    })
+                    exibirGostos.appendChild(btnOcultar)
+                    dadosUsuario.forEach(dados => {
+                        const novoDado = document.createElement('p')
+                        novoDado.textContent = `${dados.gosto}`
+                        exibirGostos.appendChild(novoDado);
+                    })
+
+                } catch (error) {
+                    alert('erro ao exibir dados do usuario', error)
+                }
 
             })
 
+
             p.appendChild(button);
+            p.appendChild(btnGostos);
             divExibir.appendChild(p);
         })
 

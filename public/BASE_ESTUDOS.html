@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <link rel="stylesheet" href="./styles/style.css">
+</head>
+
+<body>
+
+    <header>
+        <a href="index.html">Cadastro</a>
+        <a href="login.html">Login</a>
+    </header>
+
+    <div class="all">
+        <div class="user-info">
+            <h2 id="welcome-message"></h2>
+            <button id="btnLogOut">Sair</button>
+        </div>
+
+        <div class="content-section">
+            <div class="controls">
+                <button id="showUsersBtn">Mostrar todos os usuários</button>
+                <button id="showAllGostosBtn">Mostrar todos os interesses</button>
+                <button id="showUserGostosBtn">Mostrar meus interesses</button>
+            </div>
+
+            <div id="divUsers" class="data-container"></div>
+            <div id="divAllGostos" class="data-container"></div>
+            <div id="divUserGostos" class="data-container"></div>
+        </div>
+
+        <div class="add-gosto-section">
+            <h3>Adicionar novo interesse</h3>
+            <input type="text" id="iptGosto" placeholder="Digite um novo interesse">
+            <button id="addGostoBtn">Adicionar interesse</button>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const welcomeMessage = document.getElementById('welcome-message');
+        const btnLogOut = document.getElementById('btnLogOut');
+        const iptGosto = document.getElementById('iptGosto');
+        const addGostoBtn = document.getElementById('addGostoBtn');
+
+        const showUsersBtn = document.getElementById('showUsersBtn');
+        const showAllGostosBtn = document.getElementById('showAllGostosBtn');
+        const showUserGostosBtn = document.getElementById('showUserGostosBtn');
+
+        const divUsers = document.getElementById('divUsers');
+        const divAllGostos = document.getElementById('divAllGostos');
+        const divUserGostos = document.getElementById('divUserGostos');
+
+        // Verifica se há um usuário logado. Se não, redireciona para o login.
+        const usuarioLogado = localStorage.getItem('usuarioLogado');
+        if (!usuarioLogado) {
+            window.location.href = 'login.html';
+            return;
+        }
+
+        const usuario = JSON.parse(usuarioLogado);
+        welcomeMessage.textContent = `Olá, ${usuario.nome}!`;
+
+        // Funcionalidade de Sair
+        btnLogOut.addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        });
+
+        // Função genérica para buscar e exibir dados
+        async function fetchData(endpoint, targetDiv, title, callback) {
+            targetDiv.innerHTML = ''; // Limpa o conteúdo anterior
+            targetDiv.style.display = 'block';
+
+            const hideBtn = document.createElement('button');
+            hideBtn.textContent = `Esconder ${title.toLowerCase()}`;
+            hideBtn.classList.add('hide-btn');
+            hideBtn.addEventListener('click', () => {
+                targetDiv.style.display = 'none';
+            });
+            targetDiv.appendChild(hideBtn);
+
+            const heading = document.createElement('h3');
+            heading.textContent = title;
+            targetDiv.appendChild(heading);
+
+            try {
+                const response = await fetch(endpoint);
+                if (!response.ok) {
+                    throw new Error(`Falha ao buscar ${title}`);
+                }
+                const data = await response.json();
+                callback(data, targetDiv);
+            } catch (error) {
+                console.error(error);
+                targetDiv.innerHTML = `<p class="error-message">Erro ao carregar ${title.toLowerCase()}.</p>`;
+            }
+        }
+
+        // Exibe todos os usuários
+        showUsersBtn.addEventListener('click', () => {
+            fetchData('/exibir', divUsers, 'Todos os Usuários', (users, container) => {
+                users.forEach(user => {
+                    const p = document.createElement('p');
+                    p.innerHTML = `- Nome: ${user.nome}`;
+
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = 'Deletar';
+                    deleteBtn.classList.add('delete-btn');
+                    deleteBtn.addEventListener('click', async () => {
+                        if (confirm(`Tem certeza que deseja deletar o usuário ${user.nome}?`)) {
+                            await fetch(`/deletar/${user.id}`, { method: 'DELETE' });
+                            if (usuario.id === user.id) {
+                                alert('Sua conta de usuário foi deletada.');
+                                localStorage.clear();
+                                window.location.href = 'index.html';
+                            }
+                            showUsersBtn.click(); // Recarrega a lista para atualizar
+                        }
+                    });
+
+                    const detailsBtn = document.createElement('button');
+                    detailsBtn.textContent = 'Ver detalhes';
+                    detailsBtn.addEventListener('click', async () => {
+                        const response = await fetch(`/exibirDadosUsuario/${user.id}`);
+                        const userDetails = await response.json();
+                        alert(`Interesses de ${user.nome}:\n\n${userDetails.map(d => d.gosto).join('\n')}`);
+                    });
+
+                    p.appendChild(deleteBtn);
+                    p.appendChild(detailsBtn);
+                    container.appendChild(p);
+                });
+            });
+        });
+
+        // Exibe todos os interesses disponíveis
+        showAllGostosBtn.addEventListener('click', () => {
+            fetchData('/exibirGostos', divAllGostos, 'Todos os Interesses', (gostos, container) => {
+                gostos.forEach(item => {
+                    const p = document.createElement('p');
+                    p.innerHTML = `- ${item.nome}`;
+
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = 'Deletar interesse';
+                    deleteBtn.classList.add('delete-btn');
+                    deleteBtn.addEventListener('click', async () => {
+                        await fetch(`/apagarGosto/${item.id}`, { method: 'DELETE' });
+                        alert('Interesse deletado com sucesso.');
+                        showAllGostosBtn.click(); // Recarrega a lista para atualizar
+                    });
+
+                    const addBtn = document.createElement('button');
+                    addBtn.textContent = 'Adicionar aos meus interesses';
+                    addBtn.addEventListener('click', async () => {
+                        try {
+                            const response = await fetch('/gostoUsuarioAdd', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ idUsuario: usuario.id, nomeGosto: item.id })
+                            });
+
+                            if (response.ok) {
+                                alert('Interesse adicionado ao seu perfil com sucesso.');
+                            } else {
+                                alert('Este interesse já está no seu perfil.');
+                            }
+                        } catch (error) {
+                            alert('Erro ao adicionar interesse.');
+                        }
+                    });
+
+                    p.appendChild(deleteBtn);
+                    p.appendChild(addBtn);
+                    container.appendChild(p);
+                });
+            });
+        });
+
+        // Exibe os interesses específicos do usuário
+        showUserGostosBtn.addEventListener('click', () => {
+            fetchData(`/gostosUsuario/${usuario.id}`, divUserGostos, 'Meus Interesses', (gostos, container) => {
+                gostos.forEach(item => {
+                    const p = document.createElement('p');
+                    p.innerHTML = `- ${item.nome_gosto}`;
+
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = 'Deletar';
+                    deleteBtn.classList.add('delete-btn');
+                    deleteBtn.addEventListener('click', async () => {
+                        try {
+                            const response = await fetch(`/deletarGostoUsuario/${item.id}`, { method: 'DELETE' });
+                            if (response.ok) {
+                                alert('Interesse deletado com sucesso.');
+                                showUserGostosBtn.click(); // Recarrega a lista para atualizar
+                            } else {
+                                throw new Error('Erro ao deletar interesse.');
+                            }
+                        } catch (error) {
+                            alert(error.message);
+                        }
+                    });
+                    p.appendChild(deleteBtn);
+                    container.appendChild(p);
+                });
+            });
+        });
+
+        // Adiciona um novo interesse
+        addGostoBtn.addEventListener('click', async () => {
+            const nome = iptGosto.value.trim();
+
+            if (!nome) {
+                alert('Por favor, insira um interesse.');
+                return;
+            }
+            if (nome.includes(' ')) {
+                alert('Não inclua espaços no nome do interesse.');
+                return;
+            }
+
+            const response = await fetch('/addGosto', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome: nome })
+            });
+
+            if (response.ok) {
+                alert('Interesse adicionado com sucesso.');
+                iptGosto.value = '';
+                showAllGostosBtn.click(); // Atualiza a lista de todos os interesses
+            } else {
+                alert('O interesse já existe.');
+            }
+        });
+    });
+</script>

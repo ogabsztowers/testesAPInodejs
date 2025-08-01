@@ -23,10 +23,27 @@ router.post('/cadastro', (req, res) => {
                 res.status(501).json(error);
             } else {
                 console.log(results);
-                res.status(201).json(results)
+                res.status(200).json(results)
             }
         })
 
+    })
+})
+
+router.get('/exibirDadosUsuario/:id', (req, res) => {
+    const { id } = req.params;
+    const query = `select g.nome as gosto from gostosUsuario gu 
+    join gostos g on g.id = gu.nomeGosto
+    join usuario u on u.id = gu.idUsuario where u.id = ?;`
+
+    db.query(query, [id], (error, results)=>{
+        if(error){
+            console.log(error);
+            res.status(501).json(error)
+        }else{
+            console.log(results);
+            res.status(202).json(results);
+        }
     })
 })
 
@@ -66,10 +83,10 @@ router.delete('/deletar/:id', (req, res) => {
     const query = 'delete from usuario where id = ?'
 
     db.query(query, [id], (error, results) => {
-        if (error){
+        if (error) {
             console.log(error);
             res.status(501).json(error);
-        }else{
+        } else {
             console.log(results);
             res.status(202).json(results);
         }

@@ -1,0 +1,149 @@
+body {
+    background-color: black;
+    color: white;
+    margin: 0;
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    width: 100%;
+    padding: 20px 0;
+    background: linear-gradient(to right top, red, rgb(128, 35, 35));
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 20px;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+header a:hover {
+    color: #b3d9ff;
+    text-decoration: underline;
+}
+
+.all {
+    background: linear-gradient(to right top, #333, #555);
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.user-info {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#welcome-message {
+    margin: 0;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.content-section {
+    width: 100%;
+}
+
+.data-container {
+    display: none; /* Escondido por padrão */
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.data-container h3 {
+    margin-top: 0;
+    border-bottom: 1px solid #555;
+    padding-bottom: 10px;
+}
+
+.data-container p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dashed #444;
+}
+
+.data-container p:last-child {
+    border-bottom: none;
+}
+
+.data-container button {
+    margin-left: 10px;
+}
+
+.add-gosto-section {
+    width: 100%;
+    margin-top: 30px;
+    border-top: 1px solid #555;
+    padding-top: 20px;
+    text-align: center;
+}
+
+.add-gosto-section h3 {
+    margin-bottom: 15px;
+}
+
+#iptGosto {
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    margin-right: 10px;
+}
+
+button {
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.hide-btn {
+    background-color: #6c757d;
+    float: right;
+}
+
+.hide-btn:hover {
+    background-color: #5a6268;
+}
+
+.error-message {
+    color: #ffcccc;
+}
