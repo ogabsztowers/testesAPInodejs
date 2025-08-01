@@ -41,7 +41,6 @@ router.get('/exibirDadosUsuario/:id', (req, res) => {
             console.log(error);
             res.status(501).json(error)
         }else{
-            console.log(results);
             res.status(202).json(results);
         }
     })
