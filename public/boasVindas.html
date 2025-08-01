@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles/style.css">
+</head>
+<body>
+
+    <header>
+        <a href="index.html">cadastro</a>
+        <a href="login.html">login</a>
+    </header>
+    <div class="all">
+        <button id="btnLogOut">logOut</button>
+        <div id="divExibir"></div>
+        <div id="divGostos"></div>
+        <div class="gosto">
+            <input type="text" id="iptGosto" placeholder="insira gosto de preferencia">
+            <button id="idAddGosto">popular banco</button>
+        </div>
+        <div id="gostosUsuario"></div>
+
+
+    </div>
+</body>
+
+</html>
+<script>
+    const cadastrarGosto = document.getElementById('idAddGosto')
+    const usuarioLogado = localStorage.getItem('usuarioLogado');
+    const usuario = JSON.parse(usuarioLogado);
+    const logOut = document.getElementById('btnLogOut');
+    const gostosUsuario = document.getElementById('gostosUsuario');
+    const divGostos = document.getElementById('divGostos');
+    divExibir.innerHTML = `olá ${usuario.nome}`;
+
+    if (logOut) {
+        logOut.addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = 'login.html'
+        })
+    }
+
+    setInterval(async () => {
+        gostosUsuario.innerHTML = ''
+        const src = await fetch(`/gostosUsuario/${usuario.id}`, {
+            method: 'GET'
+        })
+        const gostos = await src.json()
+
+        gostosUsuario.innerHTML = 'seus gostos:<br><br>'
+        gostos.forEach(item => {
+            const p = document.createElement('p');
+            p.textContent = `-${item.nome_gosto}`
+            const btnDeletar = document.createElement('button');
+            btnDeletar.textContent = 'deletar';
+
+            btnDeletar.addEventListener('click', async () => {
+                try {
+                    const response = await fetch(`/deletarGostoUsuario/${item.id}`, {
+                        method: 'DELETE'
+                    })
+                    if (response.ok) {
+                        alert('gosto deletado com sucesso')
+                    } else {
+                        alert('erro ao deletar gosto')
+                    }
+
+                } catch (error) {
+                    alert('erro ao deletar gosto')
+                }
+            })
+
+            p.appendChild(btnDeletar)
+            gostosUsuario.appendChild(p)
+        })
+
+    }, 2000)
+
+    if (cadastrarGosto) {
+        cadastrarGosto.addEventListener('click', () => {
+            const nome = iptGosto.value;
+
+            if (nome == '') {
+                alert('insira algum valor')
+                return
+            }
+
+            if (nome.includes(' ')) {
+                alert('não inclua espaços')
+                return
+            }
+            fetch('/addGosto', {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json'
+                }, body: JSON.stringify({
+                    nome: nome
+                })
+            }).then(response => {
+                if (response.ok) {
+                    alert('gosto cadastrado com sucesso')
+                } else {
+                    alert('gosto ja existe')
+                }
+
+
+            })
+
+        })
+    }
+
+    setInterval(async () => {
+        const gostosSrc = await fetch('/exibirGostos', {
+            method: 'GET'
+        })
+        const gostos = await gostosSrc.json()
+
+        divGostos.innerHTML = ''
+        divGostos.innerHTML = 'gostos:<br><br>'
+        gostos.forEach(item => {
+            const p = document.createElement('p')
+            p.textContent = `-${item.nome}`
+
+            const btnDeletar = document.createElement('button')
+            btnDeletar.textContent = 'apagar gosto'
+            const btnAdicionar = document.createElement('button');
+            btnAdicionar.textContent = 'adicionar gosto a usuario'
+            btnAdicionar.addEventListener('click', async () => {
+                try {
+
+                    const response = await fetch('/gostoUsuarioAdd', {
+                        method: 'POST',
+                        headers: {
+                            'content-type': 'application/json'
+                        }, body: JSON.stringify({
+                            idUsuario: usuario.id,
+                            nomeGosto: item.id
+                        })
+                    })
+
+                    if (response.ok) {
+                        alert('cadastro de gosto realizado com sucesso');
+                    } else {
+                        alert('gosto ja cadastrado nos dados do usuario');
+                    }
+
+                } catch (error) {
+                    alert('erro ao realizar o cadastro do gosto');
+                }
+
+            })
+            btnDeletar.addEventListener('click', async () => {
+                await fetch(`/apagarGosto/${item.id}`, {
+                    method: 'DELETE'
+                }).then(response => {
+                    if (response.ok) {
+                        alert('gosto deletado com sucesso')
+                    } else {
+                        alert('erro ao deletar gosto')
+                    }
+
+                })
+            })
+
+            p.appendChild(btnDeletar)
+            p.appendChild(btnAdicionar)
+            divGostos.appendChild(p)
+
+        })
+
+    }, 2000)
+
+
+    setInterval(async () => {
+        divExibir.innerHTML = ''
+
+        const srcExibir = await fetch('/exibir', {
+            method: 'GET'
+        })
+        const exibir = await srcExibir.json();
+
+        divExibir.innerHTML = `olá ${usuario.nome}<br><br>usuarios:<br><br>`
+        exibir.forEach(item => {
+            const p = document.createElement('p');
+            p.textContent = `-nome: ${item.nome}`;
+
+            const button = document.createElement('button');
+            button.textContent = 'deletar';
+
+            button.addEventListener('click', async () => {
+                await fetch(`/deletar/${item.id}`, {
+                    method: 'DELETE'
+                })
+                if (usuario.email == item.email) {
+                    alert('voce deletou seu usuario com sucesso');
+                    localStorage.clear();
+                    window.location.href = 'index.html';
+                }
+
+            })
+
+            p.appendChild(button);
+            divExibir.appendChild(p);
+        })
+
+    }, 2000)
+
+
+</script>
