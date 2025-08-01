@@ -7,28 +7,91 @@ body {
     align-items: center;
     flex-direction: column;
 }
-.all{
-    background: linear-gradient(to right top, red, rgb(128, 35, 35));
+
+.all {
+    background: linear-gradient(to right top, rgb(19, 18, 18), rgb(65, 63, 63));
     padding: 20px;
     border-radius: 7px;
+    margin-top: 40px;
+
 }
+
+.all input {
+    padding: 5px;
+}
+
 
 header a {
     color: white;
     text-decoration: none;
 }
-header a:hover{
+
+header a:hover {
     color: blue;
     text-decoration: underline;
 }
 
 header {
     padding-top: 20px;
-    background: linear-gradient(to right top, red, rgb(128, 35, 35));
+    background: linear-gradient(to right top, rgba(51, 49, 49, 0.979), rgb(24, 19, 19));
     padding-bottom: 20px;
     width: 100%;
     display: flex;
     justify-content: center;
     gap: 40px;
     margin-bottom: 20px;
+}
+
+.oculto {
+    display: none;
+}
+
+.divs div {
+    background: linear-gradient(to right top, rgba(51, 49, 49, 0.979), rgb(24, 19, 19));
+    padding: 20px;
+    margin: 5px;
+    border-radius: 10px;
+}
+
+.btn {
+    border-radius: 5px;
+    background-color: blue;
+    color: white;
+    padding: 7px;
+    border: none;
+    margin: 2px;
+}
+
+.btn:hover {
+    cursor: pointer;
+    background-color: rgb(52, 52, 141);
+}
+
+.btn:active {
+    cursor: default;
+    background-color: rgb(55, 55, 105);
+}
+
+.btnDeletar {
+    border-radius: 5px;
+    background-color: red;
+    color: white;
+    padding: 7px;
+    border: none;
+    margin: 2px;
+}
+
+.btnDeletar:hover{
+    cursor: pointer;
+    background-color:rgb(228, 82, 82);
+}
+.btnDeletar:active{
+    cursor: default;
+    background-color: rgb(247, 112, 112);
+}
+.gosto{
+    margin-top: 10px;
+    border-top: 2px rgb(110, 107, 107) solid;
+    padding: 10px;
+    padding-top: 12px;
 }
