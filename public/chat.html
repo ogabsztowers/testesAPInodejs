@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <header>
+        <a href="./boasVindas.html">inicio</a>
+        <a href="index.html">sign-up</a>
+        <a href="login.html">sign-in</a>
+    </header>
+   
+    <div id="info"></div>
+    
+    <div id="chat"></div>
+    
+    <div>
+        <input type="text" id="mensagem" placeholder="Digite sua mensagem">
+        <button onclick="enviarMensagem()">Enviar</button>
+    </div>
+
+
+</body>
+</html>
+<script src="/socket.io/socket.io.js"></script>
+<script src="./src/chat.js"></script>

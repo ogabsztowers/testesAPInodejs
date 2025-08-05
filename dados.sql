@@ -9,7 +9,6 @@ nome varchar(500),
 primary key(id)
 );
 
-
 create table gostos (
 id int auto_increment,
 nome varchar(500),
@@ -25,3 +24,12 @@ constraint fkNomeGosto foreign key (nomeGosto) references gostos(id),
 primary key (id)
 );
 
+create table mensagens(
+id int auto_increment,
+mensagem longtext,
+idRemetente int,
+idDestinatario int,
+constraint fkIdRemetente foreign key(idRemetente)references usuario(id),
+constraint fkIdDestinatario foreign key(idDestinatario)references usuario(id),
+primary key (id)
+);

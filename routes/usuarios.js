@@ -32,7 +32,7 @@ router.post('/cadastro', (req, res) => {
 
 router.get('/exibirDadosUsuario/:id', (req, res) => {
     const { id } = req.params;
-    const query = `select g.nome as gosto from gostosUsuario gu 
+    const query = `select u.id,u.nome, g.nome as gosto from gostosUsuario gu 
     join gostos g on g.id = gu.nomeGosto
     join usuario u on u.id = gu.idUsuario where u.id = ?;`
 
@@ -41,6 +41,7 @@ router.get('/exibirDadosUsuario/:id', (req, res) => {
             console.log(error);
             res.status(501).json(error)
         }else{
+            console.log(results)
             res.status(202).json(results);
         }
     })
@@ -65,7 +66,7 @@ router.post('/login', (req, res) => {
 })
 
 router.get('/exibir', (req, res) => {
-    const query = 'select * from usuario'
+    const query = 'select id, nome from usuario'
 
     db.query(query, (error, results) => {
         if (error) {

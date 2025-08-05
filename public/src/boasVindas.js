@@ -54,7 +54,15 @@
                         method: 'GET'
                     })
                     const dadosUsuario = await response.json();
-
+                    const btnChat = document.createElement('button')
+                    btnChat.textContent = 'iniciar chat';
+                    btnChat.classList.add('btn');
+                    
+                    btnChat.addEventListener('click', ()=>{
+                        localStorage.setItem('conversaAtual', JSON.stringify(item))
+                        window.location.href = 'chat.html'
+                    })
+                    
                     const btnOcultar = document.createElement('button')
                     btnOcultar.textContent = 'ocultar'
                     btnOcultar.classList.add('btn')
@@ -69,7 +77,7 @@
                         exibirGostos.appendChild(novoDado);
                     })
                     exibirGostos.appendChild(btnOcultar)
-                    
+                    exibirGostos.appendChild(btnChat)
                 } catch (error) {
                     alert('erro ao exibir dados do usuario', error)
                 }
@@ -102,7 +110,7 @@
 
         });
 
-        gostosUsuario.innerHTML = 'seus gostos:<br><br>'
+        gostosUsuario.innerHTML = 'suas tags:<br><br>'
         gostos.forEach(item => {
             const p = document.createElement('p');
             p.textContent = `-${item.nome_gosto}`
@@ -132,7 +140,7 @@
         gostosUsuario.appendChild(btnOcultar)
 
     };
-
+    
     //função que exibe gostos gerais
     const carregarGostosGerais = async () => {
         divGostos.classList.remove('oculto')
@@ -145,24 +153,23 @@
         const btnOcultar = document.createElement('button');
         btnOcultar.textContent = 'ocultar'
         btnOcultar.classList.add('btn')
-
+        
         btnOcultar.addEventListener('click', () => {
             divGostos.classList.add('oculto')
-
+            
         })
-
-        divGostos.innerHTML = ''
-        divGostos.innerHTML = 'gostos:<br><br>'
+        
+        divGostos.innerHTML = 'tags:<br><br>'
         gostos.forEach(item => {
             const p = document.createElement('p')
             p.textContent = `-${item.nome}`
 
             const btnAdicionar = document.createElement('button');
-            btnAdicionar.textContent = 'adicionar gosto a usuario'
+            btnAdicionar.textContent = 'adicionar tag a usuario'
             btnAdicionar.classList.add('btn')
             btnAdicionar.addEventListener('click', async () => {
                 try {
-
+                    
                     const response = await fetch('/gostoUsuarioAdd', {
                         method: 'POST',
                         headers: {
@@ -172,7 +179,7 @@
                             nomeGosto: item.id
                         })
                     })
-
+                    
                     if (response.ok) {
                         alert('cadastro de gosto realizado com sucesso');
                     } else {
@@ -184,15 +191,14 @@
                 } catch (error) {
                     alert('erro ao realizar o cadastro do gosto');
                 }
-
+                
             })
             p.appendChild(btnAdicionar)
             divGostos.appendChild(p)
-
         })
         divGostos.appendChild(btnOcultar)
     };
-
+    
     //botao que exibe usuarios
     if (exibirUsuarios) {
         exibirUsuarios.addEventListener('click', carregarUsuarios)
