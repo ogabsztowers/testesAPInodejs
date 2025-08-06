@@ -8,7 +8,7 @@ const usuario = JSON.parse(srcUsuario);
 
 const roomId = `chat_${Math.min(usuario.id, destinatario.id)}_${Math.max(usuario.id, destinatario.id)}`;
 
-const socket = io("https://3d23ec468f38.ngrok-free.app");
+const socket = io();
 
 document.getElementById('info').innerText = `de ${usuario.nome} / para ${destinatario.nome}`;
 

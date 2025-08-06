@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { db } from '../server.js';
+import { db } from '../config/config.js';
 const router = express.Router();
 
 router.post('/cadastro', (req, res) => {

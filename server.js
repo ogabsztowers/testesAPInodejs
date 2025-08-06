@@ -1,5 +1,4 @@
 import express from 'express';
-import mysql from 'mysql2';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
@@ -10,13 +9,6 @@ const io = new Server(server, {
     cors: {
         origin: "*"
     }
-});
-
-export const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    database: 'api',
-    password: ''
 });
 
 app.use(express.json());

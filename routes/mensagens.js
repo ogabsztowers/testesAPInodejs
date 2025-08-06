@@ -1,5 +1,5 @@
 import express from 'express';
-import { db } from '../server.js';
+import { db } from '../config/config.js';
 const router = express.Router()
 
 router.post('/addMensagem', (req, res) => {
@@ -11,7 +11,6 @@ router.post('/addMensagem', (req, res) => {
             console.log(erro);
             res.status(501).json(erro);
         } else {
-            console.log(results);
             res.status(201).json(results);
         }
     })
@@ -27,7 +26,6 @@ router.get('/getMensagens/:idUsuario1/:idUsuario2', (req, res) => {
             console.log(erro);
             res.status(501).json(erro);
         } else {
-            console.log(results);
             res.status(200).json(results);
         }
     });
