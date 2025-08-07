@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
+    <link rel="stylesheet" href="./styles/style.css">
 </head>
 
 <body>
@@ -15,14 +16,17 @@
         <a href="login.html">sign-in</a>
     </header>
 
-    <div id="info"></div>
+    <div class="chat">
+        <div id="info"></div>
 
-    <div id="chat"></div>
+        <div id="chat"></div>
 
-    <div class="chat-input-container">
-        <input type="text" id="mensagem" placeholder="Digite sua mensagem">
-        <input type="file" id="fileInput" name="arquivo" accept="image/*,video/*,.pdf,.doc,.docx,.txt">
-        <button type="button" id="enviarMensagem">Enviar</button>
+        <div class="chat-input-container">
+            <input type="text" id="mensagem" placeholder="Digite sua mensagem">
+            <input type="file" id="fileInput" name="arquivo" accept="image/*,video/*,.pdf,.doc,.docx,.txt" class="oculto">
+            <label for="fileInput" class="btn file-upload-btn">Anexar</label>
+            <button type="button" id="enviarMensagem" class="btn file-upload-btn">Enviar</button>
+        </div>
     </div>
 
 </body>

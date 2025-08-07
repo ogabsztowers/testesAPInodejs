@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="./styles/styles.css">
 </head>
 
 <body>
@@ -15,13 +15,24 @@
         <a href="login.html">login</a>
     </header>
 
-    <div class="cadastro">
-        <input type="text" placeholder="EMAIL" id="iptEmail">
-        <input type="password" placeholder="SENHA" id="iptSenha">
-        <input type="text" id="iptNome" placeholder="NOME">
-    </div>
-    <button id="btnCadastro">cadastrar</button>
-</body>
+    <main class="register-container">
+        <form class="register-form">
+            <div class="form-group">
+                <label for="iptNome">NOME</label>
+                <input type="text" id="iptNome">
+            </div>
+            <div class="form-group">
+                <label for="iptEmail">EMAIL</label>
+                <input type="text" id="iptEmail">
+            </div>
+            <div class="form-group">
+                <label for="iptSenha">SENHA</label>
+                <input type="password" id="iptSenha">
+            </div>
+            <button id="btnCadastro" class="btn" type="submit">cadastrar</button>
+        </form>
+    </main>
 
+</body>
 </html>
 <script src="./src/index.js"></script>

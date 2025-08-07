@@ -20,7 +20,6 @@ router.post('/addGosto', (req, res) => {
                     console.log('erro interno no servidos ', error);
                     res.status(500).json(error);
                 } else {
-                    console.log(results);
                     res.status(202).json(results);
                 }
             })
@@ -61,7 +60,6 @@ router.delete('/apagarGosto/:id', (req, res) => {
                 console.log(error);
                 res.status(501).json(error);
             }
-            console.log(result, results);
             res.status(202).json({result, results});
 
         })
@@ -88,7 +86,6 @@ router.post('/gostoUsuarioAdd', (req, res) => {
                     console.log(error);
                     res.status(500).json(error);
                 } else {
-                    console.log(results);
                     res.status(202).json(results);
                 }
             })
@@ -119,7 +116,6 @@ router.delete('/deletarGostoUsuario/:id', (req, res) => {
             console.log(error);
             res.status(501).json(error);
         } else {
-            console.log(results);
             res.status(202).json(results);
         }
     })

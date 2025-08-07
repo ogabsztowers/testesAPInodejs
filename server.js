@@ -18,6 +18,8 @@ const io = new Server(server, {
     }
 });
 
+const usuariosOnline = {};
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(fileUpload());
@@ -37,26 +39,20 @@ if (!fs.existsSync(uploadDir)) {
 
 app.post('/upload/:roomId', (req, res) => {
     const roomId = req.params.roomId;
-
     if (!req.files || !req.files.arquivo) {
         return res.status(400).json({ error: 'Nenhum arquivo enviado.' });
     }
-
     const arquivo = req.files.arquivo;
     const roomUploadDir = path.join(uploadDir, roomId);
-
     if (!fs.existsSync(roomUploadDir)) {
         fs.mkdirSync(roomUploadDir, { recursive: true });
     }
-
     const caminho = path.join(roomUploadDir, arquivo.name);
-
     arquivo.mv(caminho, (err) => {
         if (err) {
             console.error('Erro ao mover o arquivo:', err);
             return res.status(500).json({ error: 'Erro ao fazer o upload do arquivo.' });
         }
-
         return res.json({
             message: 'Upload bem-sucedido!',
             url: `/uploads/${roomId}/${arquivo.name}`,
@@ -66,14 +62,41 @@ app.post('/upload/:roomId', (req, res) => {
 });
 
 io.on("connection", (socket) => {
-    socket.on("entrarNaSala", (roomId) => {
+    socket.on("entrarNaSala", (data) => {
+        const { roomId, userId } = data;
         socket.join(roomId);
+        usuariosOnline[userId] = socket.id;
+
+        io.to(roomId).emit("statusOnline", { userId, status: 'online' });
+
+        const [,, id1, id2] = roomId.split('_');
+        const destinatarioId = (userId == id1) ? id2 : id1;
+
+        if (usuariosOnline[destinatarioId]) {
+            socket.emit('statusOnline', { userId: destinatarioId, status: 'online' });
+        } else {
+            socket.emit('statusOffline', { userId: destinatarioId, status: 'offline' });
+        }
     });
+    
     socket.on("enviarMensagem", (data) => {
         const { roomId, mensagem } = data;
         io.to(roomId).emit("mensagemRecebida", mensagem);
     });
+
     socket.on("disconnect", () => {
+        let userIdOffline = null;
+        for (const userId in usuariosOnline) {
+            if (usuariosOnline[userId] === socket.id) {
+                userIdOffline = userId;
+                break;
+            }
+        }
+        
+        if (userIdOffline) {
+            delete usuariosOnline[userIdOffline];
+            io.emit('statusOffline', { userId: userIdOffline });
+        }
     });
 });
 

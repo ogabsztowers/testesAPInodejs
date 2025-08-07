@@ -40,7 +40,7 @@
         divExibir.innerHTML = `olá ${usuario.nome}<br><br>usuarios:<br><br>`
         exibir.forEach(item => {
             const p = document.createElement('p');
-            p.textContent = `-nome: ${item.nome}`;
+            p.innerHTML = `-nome: ${item.nome}<br>`;
 
             const btnGostos = document.createElement('button');
             btnGostos.textContent = 'ver detalhes do usuario'

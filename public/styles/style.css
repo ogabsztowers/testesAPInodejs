@@ -1,98 +1,350 @@
+/* Estilos Gerais */
 body {
-    background-color: black;
-    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #121212; 
+    color: #e0e0e0;
     margin: 0;
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
     flex-direction: column;
-}
-
-.all {
-    background: linear-gradient(to right top, rgb(19, 18, 18), rgb(65, 63, 63));
-    padding: 20px;
-    margin-top: 40px;
-
-}
-
-.all input {
-    padding: 5px;
-}
-
-
-header a {
-    color: white;
-    text-decoration: none;
-}
-
-header a:hover {
-    color: blue;
-    text-decoration: underline;
+    align-items: center;
+    min-height: 100vh;
 }
 
 header {
-    padding-top: 20px;
-    background: linear-gradient(to right top, rgba(51, 49, 49, 0.979), rgb(24, 19, 19));
-    padding-bottom: 20px;
+    background: #1e1e1e;
     width: 100%;
+    padding: 20px 0;
     display: flex;
     justify-content: center;
     gap: 40px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid #333;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
-.oculto {
-    display: none;
+header a {
+    color: #b0b0b0;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
 }
 
-.divs div {
-    background: linear-gradient(to right top, rgba(51, 49, 49, 0.979), rgb(24, 19, 19));
+header a:hover {
+    color: #3f7de0; 
+    text-decoration: underline;
+}
+
+.container {
+    width: 100%;
+    max-width: 1000px;
     padding: 20px;
+    box-sizing: border-box;
+}
+
+.all {
+    background-color: #1e1e1e;
+    border-radius: 8px; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    padding: 25px;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.all input,
+.gosto input {
+    padding: 10px;
+    border: 1px solid #3a3a3a;
+    border-radius: 4px;
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    font-size: 1rem;
     margin: 5px;
-    border-radius: 10px;
 }
 
 .btn {
-    border-radius: 5px;
-    background-color: blue;
+    border-radius: 4px;
+    background-color: #4a4a4a;
     color: white;
-    padding: 7px;
+    padding: 10px 15px;
     border: none;
-    box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.562);
-    margin: 2px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .btn:hover {
-    cursor: pointer;
-    background-color: rgb(52, 52, 141);
+    background-color: #5a5a5a;
 }
 
 .btn:active {
-    cursor: default;
-    background-color: rgb(55, 55, 105);
+    background-color: #3a3a3a;
 }
 
 .btnDeletar {
-    border-radius: 5px;
-    background-color: red;
+    border-radius: 4px; 
+    background-color: #e24a4a;
     color: white;
-    padding: 7px;
+    padding: 10px 15px;
     border: none;
-    margin: 2px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.btnDeletar:hover{
-    cursor: pointer;
-    background-color:rgb(228, 82, 82);
+.btnDeletar:hover {
+    background-color: #b13b3b;
 }
-.btnDeletar:active{
+
+.btnDeletar:active {
     cursor: default;
-    background-color: rgb(247, 112, 112);
+    background-color: #8c2d2d;
 }
-.gosto{
-    margin-top: 10px;
-    border-top: 2px rgb(110, 107, 107) solid;
+
+.oculto {
+    display: none !important;
+}
+
+.divs div {
+    background-color: #2a2a2a;
+    padding: 20px;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+.gosto {
+    margin-top: 20px;
+    border-top: 1px solid #333;
+    padding-top: 15px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.chat {
+    width: 100%;
+    max-width: 800px;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #1e1e1e;
+    border-radius: 8px; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    margin-top: 20px;
+}
+
+#chat {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#info {
+    padding: 12px 15px;
+    background-color: #2a2a2a;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    font-weight: 600;
+}
+
+.contChat {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    padding: 10px 15px;
+    border-radius: 16px;
+    max-width: 75%;
+    word-wrap: break-word;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.minha-mensagem {
+    background-color: #3f7de0; 
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+
+.outra-mensagem {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+}
+
+.contChat img, .contChat video {
+    max-width: 100%;
+    border-radius: 6px;
+    margin-top: 8px;
+}
+
+.contChat button {
+    margin: 4px 0 0 0;
+    align-self: flex-end;
+}
+
+.chat-input-container {
+    display: flex;
+    padding: 12px 15px;
+    background-color: #2a2a2a;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    gap: 8px;
+    align-items: center;
+}
+
+.chat-input-container input[type="text"] {
+    flex-grow: 1;
     padding: 10px;
-    padding-top: 12px;
+    border: none;
+    border-radius: 16px;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+.file-upload-btn {
+    padding: 10px 15px;
+    border-radius: 16px;
+    background-color: #4a4a4a;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.file-upload-btn:hover {
+    background-color: #5a5a5a;
+}
+
+.btnDelet {
+    border-radius: 4px;
+    background-color: #2a2a2a;
+    color: #3f7de0;
+    padding: 6px 10px; 
+    border: none;
+    box-shadow: none;
+    margin-top: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btnDelet:hover {
+    background-color: #3f7de0;
+    color: white;
+}
+
+@media (max-width: 600px) {
+    
+    body {
+        font-size: 14px;
+    }
+
+    header {
+        padding: 15px 0;
+        gap: 20px;
+    }
+
+    header a {
+        font-size: 0.9rem;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    #btnLogOut {
+        width: auto !important;
+        margin-right: 0 !important;
+        align-self: flex-end;
+    }
+
+    .all {
+        padding: 15px;
+        margin-top: 20px;
+    }
+
+    .all input,
+    .gosto input {
+        width: 96%; 
+        margin: 5px 0;
+    }
+
+    .gosto {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .gosto .btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .divs div {
+        padding: 15px;
+    }
+
+    .btn,
+    .btnDeletar,
+    .btnDelet {
+        width: auto;
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+
+    .chat {
+        height: 85vh;
+        margin-top: 10px;
+    }
+
+    #chat {
+        padding: 10px;
+        gap: 6px;
+    }
+
+    #info {
+        padding: 10px 15px;
+        font-size: 1rem;
+    }
+
+    .contChat {
+        padding: 8px 12px;
+        max-width: 85%;
+        font-size: 0.9rem;
+    }
+    
+    .minha-mensagem {
+        border-bottom-right-radius: 4px;
+    }
+    
+    .outra-mensagem {
+        border-bottom-left-radius: 4px;
+    }
+
+    .chat-input-container {
+        flex-wrap: wrap;
+        padding: 10px;
+        gap: 5px;
+    }
+
+    .chat-input-container input[type="text"] {
+        flex-grow: 1;
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .chat-input-container .btn,
+    .file-upload-btn {
+        flex-grow: 1;
+        text-align: center;
+        width: auto;
+    }
 }

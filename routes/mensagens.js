@@ -58,9 +58,7 @@ export default (io) => {
                 fs.unlink(filePath, (err) => {
                     if (err) {
                         console.error('Erro ao deletar arquivo:', err);
-                    } else {
-                        console.log(`Arquivo deletado: ${filePath}`);
-                    }
+                    } 
                 });
             }
             

@@ -11,7 +11,6 @@ router.post('/cadastro', (req, res) => {
             console.log(error);
             res.status(501).json(error);
         } else if (results.length > 0) {
-            console.log('usuario ', results[0].email, ' ja cadastrado');
             return res.status(301).json('usuario ', results[0].email, ' ja cadastrado')
         }
 
@@ -22,7 +21,6 @@ router.post('/cadastro', (req, res) => {
                 console.log(error);
                 res.status(501).json(error);
             } else {
-                console.log(results);
                 res.status(200).json(results)
             }
         })
@@ -41,7 +39,6 @@ router.get('/exibirDadosUsuario/:id', (req, res) => {
             console.log(error);
             res.status(501).json(error)
         }else{
-            console.log(results)
             res.status(202).json(results);
         }
     })
@@ -56,10 +53,8 @@ router.post('/login', (req, res) => {
             console.log(error);
             res.status(500).json(error);
         } else if (results.length > 0) {
-            console.log('login realizado com sucesso', results[0]);
             res.status(200).json({ usuario: results[0] });
         } else {
-            console.log('usuario não encontrado');
             res.status(404).json('usuario não encontrado')
         }
     })

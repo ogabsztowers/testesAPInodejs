@@ -8,10 +8,22 @@ const usuario = JSON.parse(srcUsuario);
 const roomId = `chat_${Math.min(usuario.id, destinatario.id)}_${Math.max(usuario.id, destinatario.id)}`;
 const socket = io();
 
-document.getElementById('info').innerText = `de ${usuario.nome} / para ${destinatario.nome}`;
+const infoDiv = document.getElementById('info');
 
 socket.on("connect", () => {
-    socket.emit("entrarNaSala", roomId);
+    socket.emit("entrarNaSala", { roomId, userId: usuario.id });
+});
+
+socket.on('statusOnline', (data) => {
+    if (data.userId == destinatario.id) {
+        infoDiv.innerText = `${destinatario.nome}: Online`;
+    }
+});
+
+socket.on('statusOffline', (data) => {
+    if (data.userId == destinatario.id) {
+        infoDiv.innerText = `${destinatario.nome}: Offline`;
+    }
 });
 
 socket.on("mensagemDeletada", (data) => {
@@ -22,27 +34,39 @@ socket.on("mensagemDeletada", (data) => {
     }
 });
 
+function rolarChatParaFinal() {
+    const chatDiv = document.getElementById('chat');
+    chatDiv.scrollTo({
+        top: chatDiv.scrollHeight,
+        behavior: 'smooth'
+    });
+}
+
 function renderizarMensagem(mensagem, chat) {
     const p = document.createElement('p');
     p.dataset.messageId = mensagem.id;
+    p.classList.add('contChat');
+    if (mensagem.de === usuario.nome) {
+        p.classList.add('minha-mensagem');
+    } else {
+        p.classList.add('outra-mensagem');
+    }
+    
     let nomeRemetente = mensagem.de == usuario.nome ? usuario.nome : destinatario.nome;
 
     if (mensagem.fileUrl) {
         const fileExtension = mensagem.fileUrl.split('.').pop().toLowerCase();
-        
         p.innerText = `${nomeRemetente}: `;
 
         if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
             const img = document.createElement('img');
             img.src = mensagem.fileUrl;
             img.alt = 'Imagem enviada';
-            img.style.maxWidth = '250px';
             p.appendChild(img);
         } else if (['mp4', 'webm', 'ogg'].includes(fileExtension)) {
             const video = document.createElement('video');
             video.src = mensagem.fileUrl;
             video.controls = true;
-            video.style.maxWidth = '250px';
             p.appendChild(video);
         } else {
             const a = document.createElement('a');
@@ -56,22 +80,18 @@ function renderizarMensagem(mensagem, chat) {
     }
 
     chat.appendChild(p);
-    chat.scrollTop = chat.scrollHeight;
-    
     return p;
 }
 
 function adicionarBotaoDeletar(msg, p) {
     const btnDelete = document.createElement('button');
     btnDelete.textContent = 'deletar';
-    
+    btnDelete.classList.add('btnDelet')
     if (msg.fileUrl) {
         btnDelete.dataset.fileUrl = msg.fileUrl;
     }
-
     btnDelete.addEventListener('click', async () => {
         const fileUrl = btnDelete.dataset.fileUrl;
-        
         await fetch(`deletarMensagem/${msg.id}`, { 
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
@@ -84,7 +104,6 @@ function adicionarBotaoDeletar(msg, p) {
 socket.on("mensagemRecebida", (mensagem) => {
     const chat = document.getElementById('chat');
     const p = renderizarMensagem(mensagem, chat);
-
     const mensagemFormatada = {
         id: mensagem.id,
         fileUrl: mensagem.fileUrl || null,
@@ -95,16 +114,15 @@ socket.on("mensagemRecebida", (mensagem) => {
     if (mensagem.de === usuario.nome) {
         adicionarBotaoDeletar(mensagemFormatada, p);
     }
+    rolarChatParaFinal();
 });
 
 async function buscarHistorico() {
     try {
         const response = await fetch(`/getMensagens/${usuario.id}/${destinatario.id}`);
         const mensagens = await response.json();
-
         const chat = document.getElementById('chat');
         chat.innerHTML = '';
-
         mensagens.forEach(msg => {
             const mensagemFormatada = {
                 id: msg.id,
@@ -113,14 +131,12 @@ async function buscarHistorico() {
                 texto: !msg.mensagem.startsWith('/uploads/') ? msg.mensagem : null,
                 idRemetente: msg.idRemetente
             };
-            
             const p = renderizarMensagem(mensagemFormatada, chat);
-
             if (mensagemFormatada.idRemetente === usuario.id) {
                 adicionarBotaoDeletar(mensagemFormatada, p);
             }
         });
-        chat.scrollTop = chat.scrollHeight;
+        rolarChatParaFinal();
     } catch (error) {
         console.error('Erro ao buscar histórico de mensagens:', error);
     }
@@ -132,7 +148,6 @@ function enviarMensagemDeTexto(texto) {
         para: destinatario.nome,
         texto: texto
     };
-
     fetch('/addMensagem', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
@@ -151,20 +166,17 @@ function enviarMensagemDeTexto(texto) {
 async function enviarArquivo(file) {
     const formData = new FormData();
     formData.append('arquivo', file); 
-
     try {
         const response = await fetch(`/upload/${roomId}`, {
             method: 'POST',
             body: formData,
         });
         const result = await response.json();
-
         const dadosArquivo = {
             de: usuario.nome,
             para: destinatario.nome,
             fileUrl: result.url
         };
-
         const addMensagemResponse = await fetch('/addMensagem', {
             method: 'POST',
             headers: { 'content-type': 'application/json' },
@@ -175,7 +187,6 @@ async function enviarArquivo(file) {
             })
         });
         const addMensagemResult = await addMensagemResponse.json();
-        
         const mensagemComId = { ...dadosArquivo, id: addMensagemResult.insertId };
         socket.emit("enviarMensagem", { roomId, mensagem: mensagemComId });
     } catch (error) {
