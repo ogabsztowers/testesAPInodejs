@@ -31,4 +31,19 @@ router.get('/getMensagens/:idUsuario1/:idUsuario2', (req, res) => {
     });
 });
 
+router.delete('/deletarMensagem/:id', (req, res) => {
+    const { id } = req.params;
+    const query = 'delete from mensagens where id = ?'
+
+    db.query(query, [id], (error, results) => {
+        if (error) {
+            console.log(error);
+            res.status(501).json(error);
+        } else {
+            console.log(results);
+            res.status(201).json(results)
+        }
+    })
+})
+
 export default router;
