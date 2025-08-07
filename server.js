@@ -26,40 +26,51 @@ import mensagensRouter from './routes/mensagens.js';
 import usuarioRouter from './routes/usuarios.js';
 import gostosRouter from './routes/gostos.js';
 
+app.use((req, res, next) => {
+    req.io = io;
+    next();
+});
+
 app.use(mensagensRouter);
 app.use(usuarioRouter);
 app.use(gostosRouter);
 
 const uploadDir = path.join(__dirname, 'public', 'uploads');
 if (!fs.existsSync(uploadDir)) {
-    console.log(`Pasta de uploads não encontrada. Criando o diretório: ${uploadDir}`);
     fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-app.post('/upload', (req, res) => {
+app.post('/upload/:roomId', (req, res) => {
+    const roomId = req.params.roomId;
+
     if (!req.files || !req.files.arquivo) {
         return res.status(400).json({ error: 'Nenhum arquivo enviado.' });
     }
 
     const arquivo = req.files.arquivo;
-    const caminho = path.join(uploadDir, arquivo.name);
+    const roomUploadDir = path.join(uploadDir, roomId);
+
+    if (!fs.existsSync(roomUploadDir)) {
+        fs.mkdirSync(roomUploadDir, { recursive: true });
+    }
+
+    const caminho = path.join(roomUploadDir, arquivo.name);
 
     arquivo.mv(caminho, (err) => {
         if (err) {
             console.error('Erro ao mover o arquivo:', err);
             return res.status(500).json({ error: 'Erro ao fazer o upload do arquivo.' });
         }
-        
-        return res.json({ 
-            message: 'Upload bem-sucedido!', 
-            url: `/uploads/${arquivo.name}`,
+
+        return res.json({
+            message: 'Upload bem-sucedido!',
+            url: `/uploads/${roomId}/${arquivo.name}`,
             mimetype: arquivo.mimetype
         });
     });
 });
 
 io.on("connection", (socket) => {
-    console.log("socket conectado:", socket.id);
     socket.on("entrarNaSala", (roomId) => {
         socket.join(roomId);
     });
@@ -68,7 +79,6 @@ io.on("connection", (socket) => {
         io.to(roomId).emit("mensagemRecebida", mensagem);
     });
     socket.on("disconnect", () => {
-        console.log("socket desconectado", socket.id);
     });
 });
 

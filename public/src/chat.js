@@ -24,43 +24,71 @@ function renderizarMensagem(mensagem, chat) {
         p.innerText = `${nomeRemetente}: `;
 
         if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
-          
             const img = document.createElement('img');
             img.src = mensagem.fileUrl;
             img.alt = 'Imagem enviada';
             img.style.maxWidth = '250px';
             p.appendChild(img);
         } else if (['mp4', 'webm', 'ogg'].includes(fileExtension)) {
-        
             const video = document.createElement('video');
             video.src = mensagem.fileUrl;
             video.controls = true;
             video.style.maxWidth = '250px';
             p.appendChild(video);
         } else {
-            
             const a = document.createElement('a');
             a.href = mensagem.fileUrl;
             a.target = '_blank';
             a.innerText = `[Arquivo: ${fileExtension}]`;
             p.appendChild(a);
         }
-        chat.appendChild(p);
     } else {
-       
         p.innerText = `${nomeRemetente}: ${mensagem.texto}`;
-        chat.appendChild(p);
     }
 
+    chat.appendChild(p);
     chat.scrollTop = chat.scrollHeight;
+    
+    return p;
 }
 
+function adicionarBotaoDeletar(msg, p) {
+    const btnDelete = document.createElement('button');
+    btnDelete.textContent = 'deletar';
+    
+    if (msg.fileUrl) {
+        btnDelete.dataset.fileUrl = msg.fileUrl;
+    }
+
+    btnDelete.addEventListener('click', async () => {
+        const fileUrl = btnDelete.dataset.fileUrl;
+        
+        await fetch(`deletarMensagem/${msg.id}`, { 
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fileUrl })
+        });
+        
+        buscarHistorico();
+    });
+    p.appendChild(btnDelete);
+}
 
 socket.on("mensagemRecebida", (mensagem) => {
     const chat = document.getElementById('chat');
-    renderizarMensagem(mensagem, chat);
-});
+    const p = renderizarMensagem(mensagem, chat);
 
+    const mensagemFormatada = {
+        id: mensagem.id,
+        fileUrl: mensagem.fileUrl || null,
+        texto: mensagem.texto || null,
+        de: mensagem.de
+    };
+    
+    if (mensagem.de === usuario.nome) {
+        adicionarBotaoDeletar(mensagemFormatada, p);
+    }
+});
 
 async function buscarHistorico() {
     try {
@@ -72,22 +100,17 @@ async function buscarHistorico() {
 
         mensagens.forEach(msg => {
             const mensagemFormatada = {
+                id: msg.id,
                 de: msg.idRemetente == usuario.id ? usuario.nome : destinatario.nome,
                 fileUrl: msg.mensagem.startsWith('/uploads/') ? msg.mensagem : null,
-                texto: !msg.mensagem.startsWith('/uploads/') ? msg.mensagem : null
+                texto: !msg.mensagem.startsWith('/uploads/') ? msg.mensagem : null,
+                idRemetente: msg.idRemetente
             };
             
-            renderizarMensagem(mensagemFormatada, chat);
-        
-            const p = chat.lastChild;
-            if (p) {
-                const btnDelete = document.createElement('button');
-                btnDelete.textContent = 'deletar';
-                btnDelete.addEventListener('click', () => {
-                    fetch(`deletarMensagem/${msg.id}`, { method: 'DELETE' });
-                    buscarHistorico();
-                });
-                p.appendChild(btnDelete);
+            const p = renderizarMensagem(mensagemFormatada, chat);
+
+            if (mensagemFormatada.idRemetente === usuario.id) {
+                adicionarBotaoDeletar(mensagemFormatada, p);
             }
         });
         chat.scrollTop = chat.scrollHeight;
@@ -95,7 +118,6 @@ async function buscarHistorico() {
         console.error('Erro ao buscar histórico de mensagens:', error);
     }
 }
-
 
 function enviarMensagemDeTexto(texto) {
     const dados = {
@@ -106,31 +128,29 @@ function enviarMensagemDeTexto(texto) {
 
     fetch('/addMensagem', {
         method: 'POST',
-        headers: {
-            'content-type': 'application/json'
-        },
+        headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
             mensagem: texto,
             idRemetente: usuario.id,
             idDestinatario: destinatario.id
         })
-    });
-
-    socket.emit("enviarMensagem", { roomId, mensagem: dados });
+    }).then(response => response.json())
+      .then(result => {
+        const mensagemComId = { ...dados, id: result.insertId };
+        socket.emit("enviarMensagem", { roomId, mensagem: mensagemComId });
+      });
 }
-
 
 async function enviarArquivo(file) {
     const formData = new FormData();
     formData.append('arquivo', file); 
 
     try {
-        const response = await fetch('/upload', {
+        const response = await fetch(`/upload/${roomId}`, {
             method: 'POST',
             body: formData,
         });
         const result = await response.json();
-        console.log('Upload de arquivo bem-sucedido:', result);
 
         const dadosArquivo = {
             de: usuario.nome,
@@ -138,19 +158,19 @@ async function enviarArquivo(file) {
             fileUrl: result.url
         };
 
-        fetch('/addMensagem', {
+        const addMensagemResponse = await fetch('/addMensagem', {
             method: 'POST',
-            headers: {
-                'content-type': 'application/json'
-            },
+            headers: { 'content-type': 'application/json' },
             body: JSON.stringify({
                 mensagem: dadosArquivo.fileUrl,
                 idRemetente: usuario.id,
                 idDestinatario: destinatario.id,
             })
         });
-
-        socket.emit("enviarMensagem", { roomId, mensagem: dadosArquivo });
+        const addMensagemResult = await addMensagemResponse.json();
+        
+        const mensagemComId = { ...dadosArquivo, id: addMensagemResult.insertId };
+        socket.emit("enviarMensagem", { roomId, mensagem: mensagemComId });
     } catch (error) {
         console.error('Erro ao fazer upload do arquivo:', error);
     }

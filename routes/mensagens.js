@@ -1,6 +1,14 @@
 import express from 'express';
 import { db } from '../config/config.js';
-const router = express.Router()
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const router = express.Router();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+router.use(express.json());
 
 router.post('/addMensagem', (req, res) => {
     const { mensagem, idRemetente, idDestinatario } = req.body;
@@ -13,7 +21,7 @@ router.post('/addMensagem', (req, res) => {
         } else {
             res.status(201).json(results);
         }
-    })
+    });
 });
 
 router.get('/getMensagens/:idUsuario1/:idUsuario2', (req, res) => {
@@ -33,17 +41,34 @@ router.get('/getMensagens/:idUsuario1/:idUsuario2', (req, res) => {
 
 router.delete('/deletarMensagem/:id', (req, res) => {
     const { id } = req.params;
-    const query = 'delete from mensagens where id = ?'
+    const { fileUrl, roomId } = req.body;
+    
+    const query = 'delete from mensagens where id = ?';
 
     db.query(query, [id], (error, results) => {
         if (error) {
-            console.log(error);
-            res.status(501).json(error);
-        } else {
-            console.log(results);
-            res.status(201).json(results)
+            console.error(error);
+            return res.status(501).json(error);
         }
-    })
-})
+
+        if (fileUrl) {
+            const filePath = path.join(__dirname, '..', 'public', fileUrl);
+            
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    console.error('Erro ao deletar arquivo:', err);
+                } else {
+                    console.log(`Arquivo deletado: ${filePath}`);
+                }
+            });
+        }
+        
+        if (req.io) {
+            req.io.to(roomId).emit('mensagemDeletada', { id });
+        }
+        
+        res.status(200).json({ message: 'Mensagem e arquivo deletados com sucesso.' });
+    });
+});
 
 export default router;
