@@ -14,8 +14,17 @@ socket.on("connect", () => {
     socket.emit("entrarNaSala", roomId);
 });
 
+socket.on("mensagemDeletada", (data) => {
+    const chat = document.getElementById('chat');
+    const mensagemElemento = chat.querySelector(`[data-message-id="${data.id}"]`);
+    if (mensagemElemento) {
+        mensagemElemento.remove();
+    }
+});
+
 function renderizarMensagem(mensagem, chat) {
     const p = document.createElement('p');
+    p.dataset.messageId = mensagem.id;
     let nomeRemetente = mensagem.de == usuario.nome ? usuario.nome : destinatario.nome;
 
     if (mensagem.fileUrl) {
@@ -66,10 +75,8 @@ function adicionarBotaoDeletar(msg, p) {
         await fetch(`deletarMensagem/${msg.id}`, { 
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ fileUrl })
+            body: JSON.stringify({ fileUrl, roomId })
         });
-        
-        buscarHistorico();
     });
     p.appendChild(btnDelete);
 }

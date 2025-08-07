@@ -22,16 +22,11 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(fileUpload());
 
-import mensagensRouter from './routes/mensagens.js';
+import getMensagensRouter from './routes/mensagens.js';
 import usuarioRouter from './routes/usuarios.js';
 import gostosRouter from './routes/gostos.js';
 
-app.use((req, res, next) => {
-    req.io = io;
-    next();
-});
-
-app.use(mensagensRouter);
+app.use(getMensagensRouter(io)); 
 app.use(usuarioRouter);
 app.use(gostosRouter);
 
