@@ -1,65 +1,103 @@
-const cadastro = document.getElementById('btnCadastro');
+const container = document.querySelector('.container');
 
-if (cadastro) {
-    cadastro.addEventListener('click', () => {
-        const email = iptEmail.value;
-        const senha = iptSenha.value;
-        const nome = iptNome.value;
+function signUp() {
+    container.classList.add('right-panel-active');
+}
 
-        if (email == '' || senha == '') {
-            alert('preencha todos os campos')
-            return;
-        }
+function voltar() {
+    container.classList.remove('right-panel-active');
+}
 
-        if (!email.includes('@')) {
-            alert('email invalido')
-            return;
-        }
+async function signUpButton() {
+    const email = emailLogin.value;
+    const senha = senhaLogin.value;
 
-        let divide = email.split('@');
-
-        if (divide[0] == '') {
-            alert('favor preencha campo antes do @')
-            return;
-        }
-
-        if (divide[1] == '') {
-            alert('favor insira dominio')
-            return;
-        }
-
-        if (!divide[1].includes('.')) {
-            alert('adicione um dominio')
-            return;
-        }
-        const dividePonto = divide[1].split('.');
-
-        if (dividePonto[0] == '') {
-            alert('preencha campo antes do .');
-            return;
-        }
-
-        if (dividePonto[1] == '') {
-            alert('preencha campo apos o .')
-            return;
-        }
-
-        fetch('/cadastro', {
+    try {
+        const response = await fetch('/login', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
             }, body: JSON.stringify({
                 email: email,
-                senha: senha,
-                nome: nome
+                senha: senha
             })
-        }).then(response => {
-            if (response.ok) {
-                alert('cadasatro realizado com sucesso');
-                window.location.href = 'login.html'
-            } else {
-                alert('erro ao realizar o cadastro')
-            }
         })
+
+        const data = await response.json()
+
+        if (response.ok) {
+            alert('login realizado com sucesso');
+            console.log('login realizado com sucesso');
+            localStorage.setItem('usuarioLogado', JSON.stringify(data.usuario));
+            window.location.href = 'boasVindas.html';
+        } else {
+            alert('email ou senha incorretos')
+        }
+
+    } catch (error) {
+        alert('erro ao realizar o login', error);
+        console.log('erro ao realizar o login');
+    }
+}
+
+function signInButton() {
+    const email = emailCadastro.value;
+    const senha = senhaCadastro.value;
+    const nome = nomeCadastro.value;
+
+    if (email == '' || senha == '' || nome == '') {
+        alert('preencha todos os campos')
+        return;
+    }
+
+    if (!email.includes('@')) {
+        alert('email invalido')
+        return;
+    }
+
+    let divide = email.split('@');
+
+    if (divide[0] == '') {
+        alert('favor preencha campo antes do @')
+        return;
+    }
+
+    if (divide[1] == '') {
+        alert('favor insira dominio')
+        return;
+    }
+
+    if (!divide[1].includes('.')) {
+        alert('adicione um dominio')
+        return;
+    }
+    const dividePonto = divide[1].split('.');
+
+    if (dividePonto[0] == '') {
+        alert('preencha campo antes do .');
+        return;
+    }
+
+    if (dividePonto[1] == '') {
+        alert('preencha campo apos o .')
+        return;
+    }
+
+    fetch('/cadastro', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        }, body: JSON.stringify({
+            email: email,
+            senha: senha,
+            nome: nome
+        })
+    }).then(response => {
+        if (response.ok) {
+            alert('cadasatro realizado com sucesso');
+            voltar();
+        } else {
+            alert('erro ao realizar o cadastro')
+        }
     })
 }

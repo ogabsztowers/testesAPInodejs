@@ -85,7 +85,7 @@ function renderizarMensagem(mensagem, chat) {
 
 function adicionarBotaoDeletar(msg, p) {
     const btnDelete = document.createElement('button');
-    btnDelete.textContent = 'deletar';
+    btnDelete.textContent = 'apagar';
     btnDelete.classList.add('btnDelet')
     if (msg.fileUrl) {
         btnDelete.dataset.fileUrl = msg.fileUrl;

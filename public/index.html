@@ -1,38 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro</title>
     <link rel="stylesheet" href="./styles/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <title>Login/Cadastro</title>
 </head>
 
 <body>
+    <header class="header"></header>
+    <div class="container">
+        <div class="form-container sign-in-container">
+            <h1 style="color: white;">Login</h1>
+            <div class="social-container">
+                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social"><i class="fab fa-google"></i></a>
+                <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <span style="color: white;">ou use sua conta</span>
+            <input type="email" placeholder="Email" id="emailLogin" />
+            <input type="password" placeholder="Senha" id="senhaLogin" />
+            <a class="esqueceu" href="#">Esqueceu sua senha?</a>
+            <button onclick="signUpButton()">ENTRAR</button>
+            <button class="ghost mobile-toggle" onclick="signUp()">Criar Conta</button>
+        </div>
 
-    <header>
-        <a href="index.html">cadastro</a>
-        <a href="login.html">login</a>
-    </header>
+        <div class="form-container sign-up-container">
+            <h1 style="color: white;">Criar Conta</h1>
+            <div class="social-container">
+                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social"><i class="fab fa-google"></i></a>
+                <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <span style="color: white;">ou use seu email para cadastro</span>
+            <input type="text" placeholder="Nome" id="nomeCadastro" />
+            <input type="email" placeholder="Email" id="emailCadastro" />
+            <input type="password" placeholder="Senha" id="senhaCadastro" />
+            <button onclick="signInButton()">REGISTRAR</button>
+            <button class="ghost mobile-toggle" onclick="voltar()">Já tenho uma conta</button>
+        </div>
 
-    <main class="register-container">
-        <form class="register-form">
-            <div class="form-group">
-                <label for="iptNome">NOME</label>
-                <input type="text" id="iptNome">
+        <div class="overlay-container">
+            <p id="pOculto" class="btn-escondido">ja tem uma conta?</p>
+            <button style="align-self: flex-start;" id="btnOculto" class="ghost btn-escondido" onclick="voltar()">login</button>
+            <div class="overlay">
+                <div class="overlay-panel overlay-right">
+                    <h1 id="h1-overlay">Olá, bem vindo ao getChat!</h1>
+                    <p id="p1-overlay">Sua plataforma ideal para conhecer pessoas novas.<br><br>
+                    <p id="p2-overlay">insira seus dados e comece sua jornada conosco</p>
+                    <button id="btnGhost-overlay" class="ghost" onclick="signUp()">Cadastrar</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="iptEmail">EMAIL</label>
-                <input type="text" id="iptEmail">
-            </div>
-            <div class="form-group">
-                <label for="iptSenha">SENHA</label>
-                <input type="password" id="iptSenha">
-            </div>
-            <button id="btnCadastro" class="btn" type="submit">cadastrar</button>
-        </form>
-    </main>
+        </div>
+    </div>
+
+    <script src="./src/index.js"></script>
 
 </body>
+
 </html>
-<script src="./src/index.js"></script>
