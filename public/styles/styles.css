@@ -223,19 +223,19 @@ button.ghost {
 #pOculto,
 #btnOculto {
     position: absolute;
-    top: 60%;
+    top: 40%;
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
     max-width: 250px;
-    z-index: 99;
+    z-index: 10;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.5s ease-in-out, visibility 0s linear 0.5s;
 }
 
 #btnOculto {
-    top: 70%;
+    top: 55%;
 }
 
 .container.right-panel-active #pOculto,

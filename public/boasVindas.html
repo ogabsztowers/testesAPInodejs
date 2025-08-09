@@ -1,44 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Bem-Vindo</title>
     <link rel="stylesheet" href="./styles/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
 
     <header>
-        <a href="./boasVindas.html">inicio</a>
-        <a href="index.html">sign-up</a>
+        <a href="./boasVindas.html">Início</a>
+        <a href="index.html">Sign-up</a>
     </header>
 
     <div class="container">
-        <div style="display: flex; width: 100%; flex-direction: row-reverse;">
-            <button id="btnLogOut" class="btn" style="align-self: flex-end;margin-right: 2%;width: 70px;">logOut</button>
+        <div class="header-actions">
+            <h1 id="boasVindasMsg">Bem-vindo(a), <span id="nomeUsuario"></span>!</h1>
+            <button id="btnLogOut" class="btn logout-btn">Sair</button>
         </div>
-        <div class="all">
-            <button style="width: 50%;" id="btnGostosUsuario" class="btn">exibir suas informações</button>
-            <button style="width: 50%;" id="btnGostos" class="btn">exibir tags</button>
-            <button style="width: 50%;" id="btnUsuario" class="btn">comunidade</button>
 
-            <div class="divs">
-                <div id="divExibir" class="oculto"></div>
-                <div id="divGostos" class="oculto"></div>
-                <div id="gostosUsuario" class="oculto"></div>
-                <div id="exibirGostos" class="oculto"></div>
+        <div class="dashboard-grid">
+            <div id="cardPerfil" class="card">
+                <i class="fas fa-user-circle card-icon"></i>
+                <h2 class="card-title">Meu Perfil</h2>
+            </div>
+            
+            <div id="cardTags" class="card">
+                <i class="fas fa-tags card-icon"></i>
+                <h2 class="card-title">Minhas Tags</h2>
             </div>
 
-            <div class="gosto">
-                <input type="text" id="iptGosto" placeholder="insira gosto de preferencia">
-                <button id="idAddGosto" class="btn">criar tag</button>
+            <div id="cardComunidade" class="card">
+                <i class="fas fa-users card-icon"></i>
+                <h2 class="card-title">Comunidade</h2>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div id="secaoPerfil" class="content-section oculto">
+                <div id="gostosUsuario" class="content-box"></div>
+                <div class="tag-input-container">
+                    <input type="text" id="iptGosto" placeholder="Crie uma nova tag...">
+                    <button id="idAddGosto" class="btn">Criar Tag</button>
+                </div>
+            </div>
+
+            <div id="secaoTags" class="content-section oculto">
+                <div id="divGostos" class="content-box"></div>
+            </div>
+
+            <div id="secaoComunidade" class="content-section oculto">
+                <div id="divExibir" class="content-box"></div>
+            </div>
+
+            <div id="detalhesUsuario" class="content-section oculto">
+                <div id="exibirGostos" class="content-box"></div>
+                <button id="btnVoltarComunidade" class="btn back-btn">Voltar para a Comunidade</button>
             </div>
         </div>
     </div>
+
+    <script src="./src/boasVindas.js"></script>
 </body>
 
 </html>
-<script src="./src/boasVindas.js"></script>
