@@ -69,7 +69,7 @@ router.post('/login', (req, res) => {
             const isMatch = await bcrypt.compare(senha, user.senha)
 
             if (isMatch) {
-                res.status(201).json('login realizado com sucesso')
+                res.status(201).json({usuario: results[0]})
             } else {
                 res.status(401).json('usuario ou senha invalidos')
 
