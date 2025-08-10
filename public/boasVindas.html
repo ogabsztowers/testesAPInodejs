@@ -11,15 +11,30 @@
 
 <body>
 
-    <header>
-        <a href="./boasVindas.html">Início</a>
-        <a href="index.html">Sign-up</a>
-    </header>
 
     <div class="container">
         <div class="header-actions">
             <h1 id="boasVindasMsg">Bem-vindo(a), <span id="nomeUsuario"></span>!</h1>
-            <button id="btnLogOut" class="btn logout-btn">Sair</button>
+            
+            <div class="user-menu-container">
+                <button id="menuUserBtn" class="btn user-menu-btn">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <div id="userDropdown" class="user-dropdown-content oculto">
+                    <a href="#" class="dropdown-item">
+                        <i class="fas fa-cog"></i> <span>Configurações</span>
+                    </a>
+                    <a href="index.html" class="dropdown-item">
+                        <i class="fas fa-sync-alt"></i> <span>Trocar de Conta</span>
+                    </a>
+                    <a href="#" class="dropdown-item">
+                        <i class="fas fa-info-circle"></i> <span>Sobre</span>
+                    </a>
+                    <button id="btnLogOut" class="dropdown-item logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> <span>Sair</span>
+                    </button>
+                </div>
+            </div>
         </div>
 
         <div class="dashboard-grid">

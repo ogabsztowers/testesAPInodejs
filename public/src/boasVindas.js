@@ -20,6 +20,9 @@ const cadastrarGostoBtn = document.getElementById('idAddGosto');
 const logOutBtn = document.getElementById('btnLogOut');
 const btnVoltarComunidade = document.getElementById('btnVoltarComunidade');
 
+const menuUserBtn = document.getElementById('menuUserBtn');
+const userDropdown = document.getElementById('userDropdown');
+
 const mostrarSecao = (secao) => {
     secaoPerfil.classList.add('oculto');
     secaoTags.classList.add('oculto');
@@ -28,7 +31,6 @@ const mostrarSecao = (secao) => {
     secao.classList.remove('oculto');
 };
 
-// Funções para carregar dados
 const carregarGostosUsuarioLogado = async () => {
     gostosUsuarioDiv.innerHTML = '<h3>Suas Tags</h3>';
     const src = await fetch(`/gostosUsuario/${usuario.id}`, { method: 'GET' });
@@ -158,6 +160,18 @@ btnVoltarComunidade.addEventListener('click', () => {
     mostrarSecao(secaoComunidade);
 });
 
+menuUserBtn.addEventListener('click', () => {
+    userDropdown.classList.toggle('oculto');
+    userDropdown.classList.toggle('ativo');
+});
+
+document.addEventListener('click', (event) => {
+    if (!menuUserBtn.contains(event.target) && !userDropdown.contains(event.target)) {
+        userDropdown.classList.add('oculto');
+        userDropdown.classList.remove('ativo');
+    }
+});
+
 if (cadastrarGostoBtn) {
     cadastrarGostoBtn.addEventListener('click', async () => {
         const nome = iptGosto.value.trim();
@@ -194,4 +208,4 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('nomeUsuario').textContent = usuario.nome;
     mostrarSecao(secaoPerfil);
     carregarGostosUsuarioLogado();
-});
+});s

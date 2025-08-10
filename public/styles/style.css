@@ -48,6 +48,7 @@ header a:hover {
     align-items: center;
     width: 100%;
     margin-bottom: 25px;
+    position: relative;
 }
 
 #boasVindasMsg {
@@ -186,26 +187,86 @@ header a:hover {
     transform: scale(0.98);
 }
 
-.logout-btn {
-    background-color: #e24a4a;
-    border: none;
+.user-menu-container {
+    position: relative;
 }
-.logout-btn:hover {
+
+.user-menu-btn {
+    background-color: transparent;
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.user-menu-btn:hover {
+    background-color: #2a2a2a;
+    transform: scale(1.05);
+}
+
+.user-dropdown-content {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: #1e1e1e;
+    min-width: 200px;
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.5);
+    border-radius: 6px;
+    z-index: 100;
+    overflow: hidden;
+    transform: scale(0.8);
+    opacity: 0;
+    transform-origin: top right;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.user-dropdown-content.ativo {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.dropdown-item {
+    color: #e0e0e0;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-item i {
+    width: 20px;
+    text-align: center;
+    color: #ADD8E6;
+}
+
+.dropdown-item:hover {
+    background-color: #333;
+}
+
+.dropdown-item.logout-btn {
+    background-color: #e24a4a;
+    color: white;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.dropdown-item.logout-btn:hover {
     background-color: #b13b3b;
 }
 
-.btnDeletar {
-    border-radius: 4px; 
-    background-color: transparent;
-    color: #e24a4a;
-    padding: 8px 12px;
-    border: 1px solid #e24a4a;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.btnDeletar:hover {
-    background-color: #e24a4a;
+.dropdown-item.logout-btn i {
     color: white;
 }
 
@@ -228,9 +289,8 @@ header a:hover {
         font-size: 1.5rem;
     }
     
-    .logout-btn {
-        width: 100%;
-        text-align: center;
+    .user-menu-container {
+        align-self: flex-end;
     }
     
     .tag-input-container {
@@ -341,8 +401,8 @@ header a:hover {
 
 .btnDelet {
     border-radius: 4px;
-    background-color: #2a2a2a;
-    color: #3f7de0;
+    background-color: #3f7de0;
+    color:  #000000;
     padding: 6px 10px; 
     border: none;
     box-shadow: none;
@@ -354,6 +414,26 @@ header a:hover {
 .btnDelet:hover {
     background-color: #3f7de0;
     color: white;
+}
+
+.btnDeletar {
+    border-radius: 4px;
+    background-color: #1e1e1e; 
+    color: white; 
+    padding: 8px 12px;
+    border: 5px double #b13b3b; 
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.btnDeletar:hover {
+    border: 5px double #c42f2f;
+    transform: translateY(-2px);
+}
+
+.btnDeletar:active {
+    border: 5px double #c42f2f;
+    transform: scale(0.98);
 }
 
 @media (max-width: 600px) {
@@ -372,45 +452,6 @@ header a:hover {
 
     .container {
         padding: 10px;
-    }
-
-    #btnLogOut {
-        width: auto !important;
-        margin-right: 0 !important;
-        align-self: flex-end;
-    }
-
-    .all {
-        padding: 15px;
-        margin-top: 20px;
-    }
-
-    .all input,
-    .gosto input {
-        width: 96%; 
-        margin: 5px 0;
-    }
-
-    .gosto {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .gosto .btn {
-        width: 100%;
-        margin-top: 10px;
-    }
-
-    .divs div {
-        padding: 15px;
-    }
-
-    .btn,
-    .btnDeletar,
-    .btnDelet {
-        width: auto;
-        padding: 8px 12px;
-        font-size: 0.9rem;
     }
 
     .chat {
