@@ -26,7 +26,6 @@ async function signUpButton() {
         const data = await response.json()
 
         if (response.ok) {
-            alert('login realizado com sucesso');
             console.log('login realizado com sucesso');
             localStorage.setItem('usuarioLogado', JSON.stringify(data.usuario));
             window.location.href = 'boasVindas.html';
@@ -94,7 +93,6 @@ function signInButton() {
         })
     }).then(response => {
         if (response.ok) {
-            alert('cadasatro realizado com sucesso');
             voltar();
         } else {
             alert('erro ao realizar o cadastro')

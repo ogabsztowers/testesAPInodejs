@@ -6,6 +6,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+
+import swaggerOptions from './swaggerOptions.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -28,9 +33,12 @@ import getMensagensRouter from './routes/mensagens.js';
 import usuarioRouter from './routes/usuarios.js';
 import gostosRouter from './routes/gostos.js';
 
-app.use(getMensagensRouter(io)); 
+app.use(getMensagensRouter(io));
 app.use(usuarioRouter);
 app.use(gostosRouter);
+
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 const uploadDir = path.join(__dirname, 'public', 'uploads');
 if (!fs.existsSync(uploadDir)) {
@@ -78,7 +86,7 @@ io.on("connection", (socket) => {
             socket.emit('statusOffline', { userId: destinatarioId, status: 'offline' });
         }
     });
-    
+
     socket.on("enviarMensagem", (data) => {
         const { roomId, mensagem } = data;
         io.to(roomId).emit("mensagemRecebida", mensagem);
@@ -92,7 +100,7 @@ io.on("connection", (socket) => {
                 break;
             }
         }
-        
+
         if (userIdOffline) {
             delete usuariosOnline[userIdOffline];
             io.emit('statusOffline', { userId: userIdOffline });
@@ -102,4 +110,5 @@ io.on("connection", (socket) => {
 
 server.listen(3000, () => {
     console.log('API rodando na porta 3000');
+    console.log('Documentação Swagger disponível em: http://localhost:3000/api-docs');
 });

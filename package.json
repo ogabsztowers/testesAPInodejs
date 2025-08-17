@@ -18,6 +18,8 @@
     "express-fileupload": "^1.5.2",
     "mysql2": "^3.14.2",
     "nodemon": "^3.1.10",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   }
 }

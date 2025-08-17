@@ -38,7 +38,7 @@ const carregarGostosUsuarioLogado = async () => {
     
     gostos.forEach(item => {
         const p = document.createElement('p');
-        p.innerHTML = `<span>${item.nome_gosto}</span>`;
+        p.innerHTML = `<span>#${item.nome_gosto}</span>`;
         
         const btnDeletar = document.createElement('button');
         btnDeletar.textContent = 'Deletar';
@@ -46,10 +46,9 @@ const carregarGostosUsuarioLogado = async () => {
         btnDeletar.addEventListener('click', async () => {
             try {
                 await fetch(`/deletarGostoUsuario/${item.id}`, { method: 'DELETE' });
-                alert('Tag deletada com sucesso!');
                 carregarGostosUsuarioLogado(); 
             } catch (error) {
-                alert('Erro ao deletar gosto.');
+
             }
         });
         
@@ -65,7 +64,7 @@ const carregarGostosGerais = async () => {
 
     gostos.forEach(item => {
         const p = document.createElement('p');
-        p.innerHTML = `<span>${item.nome}</span>`;
+        p.innerHTML = `<span>#${item.nome}</span>`;
         
         const btnAdicionar = document.createElement('button');
         btnAdicionar.textContent = 'Adicionar';
@@ -79,13 +78,12 @@ const carregarGostosGerais = async () => {
                 });
                 
                 if (response.ok) {
-                    alert('Tag adicionada com sucesso!');
                     carregarGostosUsuarioLogado();
                 } else {
-                    alert('Você já tem essa tag!');
+
                 }
             } catch (error) {
-                alert('Erro ao adicionar a tag.');
+
             }
         });
         p.appendChild(btnAdicionar);
@@ -133,11 +131,11 @@ const carregarDetalhesUsuario = async (item) => {
         const dadosUsuario = await response.json();
         dadosUsuario.forEach(dados => {
             const novoDado = document.createElement('p');
-            novoDado.textContent = `${dados.gosto}`;
+            novoDado.textContent = `#${dados.gosto}`;
             exibirGostos.appendChild(novoDado);
         });
     } catch (error) {
-        alert('Erro ao exibir dados do usuário.');
+
     }
 };
 
